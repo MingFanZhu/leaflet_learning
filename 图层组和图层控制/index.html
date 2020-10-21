@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>图层组和图层控制</title>
+    <link rel="stylesheet" href="../leaflet/leaflet.css">
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+        #map {
+            position:absolute;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script src="../leaflet/leaflet.js"></script>
+    <script>
+        var littleton = L.marker([39.61, -105.02]).bindPopup('This is Littleton, CO.'),
+            denver = L.marker([39.74, -104.99]).bindPopup('This is Denver, CO.'),
+            aurora = L.marker([39.73, -104.8]).bindPopup('This is Aurora, CO.'),
+            golden = L.marker([39.77, -105.23]).bindPopup('This is Golden, CO.');
+
+        var cities = L.layerGroup([littleton, denver, aurora, golden]);
+
+        var mapboxUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}';
+        var accessToken = 'pk.eyJ1Ijoia2F6aW1hIiwiYSI6ImNrZ2l3c2gwMTAyMWYyd2xsc3Z4NWRwN2IifQ.1uHRqKfCZ2hkbMXdJROKVQ';
+        var mapboxAttribution = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>';
+        var grayscale = L.tileLayer(mapboxUrl, { id: 'mapbox/light-v9', tileSize: 512, zoomOffset: -1, attribution: mapboxAttribution, accessToken: accessToken }),
+            streets = L.tileLayer(mapboxUrl, { id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1, attribution: mapboxAttribution, accessToken: accessToken });
+
+        var map = L.map('map', {
+            center: [39.73, -104.99],
+            zoom: 10,
+            layers: [grayscale, cities]
+        });
+
+        var baseMaps = {
+            "Grayscale": grayscale,
+            "Streets": streets
+        };
+
+        var overlayMaps = {
+            "Cities": cities
+        };
+
+        L.control.layers(baseMaps, overlayMaps).addTo(map);
+    </script>
+</body>
+
+</html>
